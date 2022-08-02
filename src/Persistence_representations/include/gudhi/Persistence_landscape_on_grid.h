@@ -134,6 +134,13 @@ class Persistence_landscape_on_grid {
   void print_to_file(const char* filename) const;
 
   /**
+   * This function returns the values of the landscape on the points of the grid.
+  **/
+std::vector<std::vector<double>> landscape_on_grid() const{
+      return this->values_of_landscapes;
+  }
+
+  /**
    * This function compute integral of the landscape (defined formally as sum of integrals on R of all landscape
    *functions)
   **/
