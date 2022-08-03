@@ -12,7 +12,7 @@ std::vector<std::vector<double>> landscape_on_grid(
     return landscape.landscape_on_grid();
 }
 
-PYBIND11_MODULE(landscape, m) {
+PYBIND11_MODULE(landscape_cpp, m) {
     m.attr("__license__") = "GPL v3";
     m.def("landscape_on_grid", &landscape_on_grid,
     py::arg("diagram_1"), py::arg("grid_min"), py::arg("grid_max"),
