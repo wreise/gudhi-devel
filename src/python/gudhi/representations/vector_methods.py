@@ -18,6 +18,8 @@ from sklearn.metrics       import pairwise
 
 from .preprocessing import DiagramScaler, BirthPersistenceTransform
 
+from .silhouette import silhouette_cpp
+
 #############################################
 # Finite Vectorization methods ##############
 #############################################
