@@ -936,7 +936,7 @@ std::vector<std::vector<double>> landscape_on_grid() const{
 void Persistence_landscape_on_grid::set_up_values_of_landscapes(const std::vector<std::pair<double, double> >& p,
                                                                 double grid_min_, double grid_max_,
                                                                 size_t number_of_points_, unsigned number_of_levels) {
-  bool dbg = false;
+  bool dbg = true;
   if (dbg) {
     std::clog << "Here is the procedure : set_up_values_of_landscapes. The parameters are : grid_min_ : " << grid_min_
               << ", grid_max_ : " << grid_max_ << ", number_of_points_ : " << number_of_points_

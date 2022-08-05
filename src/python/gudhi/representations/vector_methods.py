@@ -18,7 +18,7 @@ from sklearn.metrics       import pairwise
 
 from .preprocessing import DiagramScaler, BirthPersistenceTransform
 
-from .landscape_cpp import landscape_on_grid
+from .landscape_cpp import landscape_on_grid, test_fct
 
 #############################################
 # Finite Vectorization methods ##############
