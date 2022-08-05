@@ -136,8 +136,19 @@ class Persistence_landscape_on_grid {
   /**
    * This function returns the values of the landscape on the points of the grid.
   **/
-std::vector<std::vector<double>> landscape_on_grid() const{
-      return this->values_of_landscapes;
+std::vector<std::vector<double>> landscape_on_grid(siez_t number_of_levels) const{
+    size_t number_of_points = this->number_of_functions_for_projections_to_reals;
+    double dx = (grid_max - grid_min)/number_of_points;
+    std::vector<std::vector<double>> complete_landscape(number_of_points);
+      for (size_t i = 0; i < number_of_points; i++) {
+          std::vector<double> single_point(number_of_levels);
+          double evaluation_point = dx*i + grid_min;
+          for (size_t j=0; j < number_of_levels; j++) {
+              single_point[j] = this->compute_value_at_a_given_point(j, evaluation_point);
+          }
+          complete_landscape[i] = single_point;
+      }
+    return complete_landscape;
   }
 
   /**
@@ -978,9 +989,13 @@ void Persistence_landscape_on_grid::set_up_values_of_landscapes(const std::vecto
   double dx = (grid_max_ - grid_min_) / static_cast<double>(number_of_points_);
   // for every interval in the diagram:
   for (size_t int_no = 0; int_no != p.size(); ++int_no) {
-    size_t grid_interval_begin = (p[int_no].first - grid_min_) / dx;
-    size_t grid_interval_end = (p[int_no].second - grid_min_) / dx;
-    size_t grid_interval_midpoint = (size_t)(0.5 * (grid_interval_begin + grid_interval_end));
+    double begin =  (p[int_no].first - grid_min_) / dx;
+    double end = (p[int_no].second - grid_min_) /dx;
+    double midpoint = ((p[int_no].first + p[int_no].second)*0.5 - grid_min_)/dx;
+    auto trim = [number_of_points_](double p){ return std::min(std::max(0., p), (double) number_of_points_)};
+    size_t grid_interval_begin = trim(begin);
+    size_t grid_interval_end = trim(end);
+    size_t grid_interval_midpoint = trim(midpoint);
 
     if (dbg) {
       std::clog << "Considering an interval : " << p[int_no].first << "," << p[int_no].second << std::endl;
@@ -989,8 +1004,14 @@ void Persistence_landscape_on_grid::set_up_values_of_landscapes(const std::vecto
       std::clog << "grid_interval_end : " << grid_interval_end << std::endl;
       std::clog << "grid_interval_midpoint : " << grid_interval_midpoint << std::endl;
     }
-
     double landscape_value = dx;
+    if ((begin < 0)&(midpoint >= 0)){
+        landscape_value = p[int_no].first - grid_min_ + dx;
+    } else if ((midpoint < 0)&(end >= 0)){
+        landscape_value = grid_min_ - (p[int_no].first + p[int_no].second)*0.5 - dx;
+    } else if (end<0){
+        continue;
+    }
     for (size_t i = grid_interval_begin + 1; i < grid_interval_midpoint; ++i) {
       if (dbg) {
         std::clog << "Adding landscape value (going up) for a point : " << i << " equal : " << landscape_value
